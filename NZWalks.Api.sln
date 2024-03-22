@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34701.34
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NZWalks.Api", "NZWalks.Api\NZWalks.Api.csproj", "{673C7728-5A53-463F-9987-F58726EDA69E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NZWalks", "NZWalks.Api\NZWalks.csproj", "{673C7728-5A53-463F-9987-F58726EDA69E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
