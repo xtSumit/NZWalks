@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using NZWalks.Api.Models.Domain;
 using NZWalks.Api.Models.DTO;
+using NZWalks.CustomActionFilters;
 using NZWalks.Models.DTO;
 using NZWalks.Repositories;
 
@@ -15,14 +16,14 @@ namespace NZWalks.Controllers
         private readonly IWalkRepository walkRepository;
         private readonly IMapper mapper;
 
-        public WalksController(IWalkRepository walkRepository ,IMapper mapper)
+        public WalksController(IWalkRepository walkRepository, IMapper mapper)
         {
             this.walkRepository = walkRepository;
             this.mapper = mapper;
         }
 
         [HttpGet]
-        public async Task<IActionResult> Get() 
+        public async Task<IActionResult> Get()
         {
             var walkDomainModel = await walkRepository.GetAllAsync();
             if (walkDomainModel == null)
@@ -31,22 +32,23 @@ namespace NZWalks.Controllers
             }
             return Ok(walkDomainModel);
         }
-        
+
         [HttpGet]
         [Route("{id:Guid}")]
-        public async Task<IActionResult> GetById(Guid id) 
+        public async Task<IActionResult> GetById(Guid id)
         {
             var walkDomainModel = await walkRepository.GetByIdAsync(id);
             if (walkDomainModel == null)
             {
                 return NotFound();
-            } 
-            
+            }
+
             var walkDto = mapper.Map<WalkDto>(walkDomainModel);
             return Ok(walkDto);
         }
 
         [HttpPost]
+        [ValidateModel]
         public async Task<IActionResult> Create([FromBody] AddWalkRequestDto addWalkRequestDto)
         {
             var walkDomainModel = mapper.Map<Walk>(addWalkRequestDto);
@@ -55,13 +57,14 @@ namespace NZWalks.Controllers
 
             var walkDto = mapper.Map<WalkDto>(walkDomainModel);
             return Ok(walkDto);
-
         }
 
         [HttpPut]
         [Route("{id:Guid}")]
-        public async Task<IActionResult> Update([FromRoute]Guid id, [FromBody]  UpdateWalkRequestDto updateWalkRequestDto)
+        [ValidateModel]
+        public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateWalkRequestDto updateWalkRequestDto)
         {
+
             var walkDomainModel = mapper.Map<Walk>(updateWalkRequestDto);
 
             walkDomainModel = await walkRepository.UpdateAsync(id, walkDomainModel);
@@ -72,6 +75,9 @@ namespace NZWalks.Controllers
 
             var walkDto = mapper.Map<UpdateWalkRequestDto>(walkDomainModel);
             return Ok(walkDto);
+
+
+
 
         }
 
