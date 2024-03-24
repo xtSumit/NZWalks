@@ -41,8 +41,7 @@ namespace NZWalks.Api.Migrations
                 name: "Walks",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     LengthInKm = table.Column<double>(type: "float", nullable: false),
@@ -52,19 +51,17 @@ namespace NZWalks.Api.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_Walks", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Walks_Difficulties_DifficultyId",
-                        column: x => x.DifficultyId,
-                        principalTable: "Difficulties",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                    table.PrimaryKey("PK_Difficulties", x => x.Id);
                 });
 
             migrationBuilder.CreateIndex(
                 name: "IX_Walks_DifficultyId",
                 table: "Walks",
                 column: "DifficultyId");
+            migrationBuilder.CreateIndex(
+                name: "IX_Walks_RegionId",
+                table: "Walks",
+                column: "RegionId");
         }
 
         /// <inheritdoc />

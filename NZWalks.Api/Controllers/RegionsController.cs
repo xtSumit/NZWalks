@@ -83,7 +83,7 @@ namespace NZWalks.Api.Controllers
             //};
             var regionDomainModel = mapper.Map<Region>(addRegionRequestDto);
 
-            var region = await regionRepository.CreateAsync(regionDomainModel);
+            regionDomainModel = await regionRepository.CreateAsync(regionDomainModel);
 
             //var regionDto = new RegionDto()
             //{
@@ -93,9 +93,9 @@ namespace NZWalks.Api.Controllers
             //    RegionImageUrl = region.RegionImageUrl
             //};
 
-            var regionDto = mapper.Map<AddRegionRequestDto>(region);
+            var regionDto = mapper.Map<AddRegionRequestDto>(regionDomainModel);
 
-            return CreatedAtAction(nameof(GetById), new {id = region.Id}, regionDto);
+            return CreatedAtAction(nameof(GetById), new {id = regionDomainModel.Id}, regionDto);
         }
         
         [HttpPut]
