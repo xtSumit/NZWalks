@@ -8,6 +8,7 @@ using NZWalks.Api.Models.Domain;
 using NZWalks.Api.Models.DTO;
 using NZWalks.Models.DTO;
 using NZWalks.Repositories;
+using System.Text.Json;
 
 namespace NZWalks.Api.Controllers
 {
@@ -19,39 +20,60 @@ namespace NZWalks.Api.Controllers
         private readonly NZWalksDbContext dbContext;
         private readonly IRegionRepository regionRepository;
         private readonly IMapper mapper;
+        private readonly ILogger<RegionsController> logger;
 
-        public RegionsController(NZWalksDbContext dbContext, IRegionRepository regionRepository, IMapper mapper) 
+        public RegionsController(NZWalksDbContext dbContext,
+            IRegionRepository regionRepository,
+            IMapper mapper,
+            ILogger<RegionsController> logger) 
         {
             this.dbContext = dbContext;
             this.regionRepository = regionRepository;
             this.mapper = mapper;
+            this.logger = logger;
         }
 
         [HttpGet]
-        [Authorize(Roles ="Reader")]
+        //[Authorize(Roles = "Reader")]
         public async Task<IActionResult> GetAll()
         {
-            var regions = await regionRepository.GetAllAsync();
+            try
+            {
+                throw new Exception("This is custom exception");
 
-            //Mapping Regions Domain Model to Region DTO
-            var regionsDto = mapper.Map<List<RegionDto>>(regions);
+                logger.LogInformation("GetAllRegions action method was invoked");
 
-            //var regionsDto = new List<RegionDto>();
+                var regions = await regionRepository.GetAllAsync();
 
-            //foreach (var region in regions)
-            //{
-            //    regionsDto.Add(
-            //        new RegionDto()
-            //    {
-            //            Id = region.Id,
-            //            Name = region.Name,
-            //            Code = region.Code,
-            //            RegionImageUrl = region.RegionImageUrl
-            //    });
-            //}
+                logger.LogInformation($"Finished GetAllRegions request with data: {JsonSerializer.Serialize(regions)} ");
 
 
-            return Ok(regionsDto);
+                //Mapping Regions Domain Model to Region DTO
+                var regionsDto = mapper.Map<List<RegionDto>>(regions);
+
+                //var regionsDto = new List<RegionDto>();
+
+                //foreach (var region in regions)
+                //{
+                //    regionsDto.Add(
+                //        new RegionDto()
+                //    {
+                //            Id = region.Id,
+                //            Name = region.Name,
+                //            Code = region.Code,
+                //            RegionImageUrl = region.RegionImageUrl
+                //    });
+                //}
+
+
+                return Ok(regionsDto);
+            }
+            catch (Exception ex)
+            {
+                logger.LogError(ex, ex.Message);
+                throw;
+            }
+            
         }
         
         [HttpGet]
