@@ -21,6 +21,7 @@ var logger = new LoggerConfiguration()
     .WriteTo.File("Logs/NzWalks_Log.txt", rollingInterval: RollingInterval.Minute)
     .MinimumLevel.Warning()
     .CreateLogger();
+
 builder.Logging.ClearProviders();
 builder.Logging.AddSerilog(logger);
 
